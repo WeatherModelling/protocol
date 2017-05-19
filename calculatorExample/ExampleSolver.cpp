@@ -1,4 +1,5 @@
 #include "ExampleSolver.h"
+#include <cmath>
 
 ExampleSolver::ExampleSolver(const nlohmann::json & d) :
 	Solver(d),
@@ -15,7 +16,9 @@ ExampleSolver::ExampleSolver(const nlohmann::json & d) :
 bool ExampleSolver::makeStep()
 {
 	time += 0.03;
-
+	for (int i = 0; i < Nx; i++) {
+		v[i] = sin(time)*sin(i*0.1);
+	}
 	return true;
 }
 

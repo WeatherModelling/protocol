@@ -41,11 +41,12 @@ void Service::executeCommand(const char * JSON)
 			{"errordetails", ex.what() }
 		};
 	}
+	outputStream << '\0';
 }
 
 void Service::version(const nlohmann::json & d)
 {
-	outputStream << R"({"version":)" << std::to_string(versionNumber) << "}";
+	outputStream << R"({"version":)" << std::to_string(protocolVersion) << "}";
 }
 
 void Service::getCapabilities(const nlohmann::json & d)
@@ -75,6 +76,9 @@ void Service::getCapabilities(const nlohmann::json & d)
 
 void Service::initSolver(const nlohmann::json & d)
 {
+	if (solver != nullptr) {
+		delete solver;
+	}
 	solver = new ExampleSolver(d["params"]);
 	outputStream << R"({"success":"true"})";
 }

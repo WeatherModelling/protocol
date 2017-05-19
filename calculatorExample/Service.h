@@ -5,7 +5,7 @@
 #include "Solver.h"
 
 class Service {
-	const int versionNumber = 1;
+	const int protocolVersion = 1;
 	std::ostream& outputStream;
 	Solver* solver = nullptr;
 public:
