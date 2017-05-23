@@ -33,7 +33,7 @@
 	  "caption": "plot height versus coordinate",
       "type": "line",
       "xvalues": "x",
-      "yvalues": "v"
+      "yvalues": "u"
     }
   ]
 }

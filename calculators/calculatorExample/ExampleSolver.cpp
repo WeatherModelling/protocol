@@ -15,10 +15,10 @@ ExampleSolver::ExampleSolver(const nlohmann::json & d) :
 
 bool ExampleSolver::makeStep()
 {
-	time += 0.03;
+	time += 0.003;
 	for (int i = 0; i < Nx; i++) {
 		v[i] = sin(time) + sin(6.28*i / Nx);
-		u[i] = sin(time) * sin(6.28*i / Nx);
+		u[i] = sin(time) * sin(6.28*i / Nx*(1+0.1*sin(time*3)));
 	}
 	return true;
 }

@@ -50,7 +50,7 @@ namespace GUI
 
 
         // object responsible for chart painting
-        GNUPlotter chartPainter = new GNUPlotter();
+        GNUPlotter chartPainter;
 
         public MainWindow()
         {
@@ -62,8 +62,6 @@ namespace GUI
             problems = Problem.ReadRirectory(WorkingDir + "/problems");
             ProblemsListBox.ItemsSource = problems;
 
-            // bind charting model to view
-            this.DataContext = chartPainter;
         }
 
         // 
@@ -143,7 +141,18 @@ namespace GUI
             {
                 state = State.Completed;
             }
-            
+
+
+            chartPainter = new GNUPlotter(
+                new GUI.GNUPlot.LineSeries(
+                    CurrentProblem.json["views"][0] as JObject,
+                    CurrentProblem.SolverConnector.OutputConfiguration
+                )
+            );
+            // bind charting model to view
+            ChartsContainer.DataContext = chartPainter;
+
+
             // get calculation results for stationary model or initial fields for dynamic model
             // paint result charts
             chartPainter.Update(
@@ -180,6 +189,6 @@ namespace GUI
             CurrentProblem?.SolverConnector?.Disconnect();
         }
     }
-    
+
 
 }

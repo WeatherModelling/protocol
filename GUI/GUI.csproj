@@ -57,8 +57,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="GNUPlotSeries.cs" />
+    <Compile Include="Series.cs" />
     <Compile Include="GNUPlotter.cs" />
+    <Compile Include="LineSeries.cs" />
     <Compile Include="LocalSolverConnector.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Problem.cs" />

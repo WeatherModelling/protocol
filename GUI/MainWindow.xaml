@@ -29,7 +29,10 @@
                     <Button Content="Запусить" Click="Start_Click"/>
                     <Button Content="Остановить" Click="Stop_Click" />
                 </StackPanel>
-                <Image Source="{Binding Path=Image}"/>
+                <StackPanel x:Name="ChartsContainer">
+                    <Image Source="{Binding Path=Image}"/>
+                    
+                </StackPanel>
                 <!-- , Converter={StaticResource uriToImageConv}-->
 
 

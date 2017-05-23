@@ -14,6 +14,7 @@ namespace GUI
         public bool Restartable { get; private set; }
         public bool Dynamic { get; private set; }
         public readonly JObject settings;
+        public JArray OutputConfiguration { get; private set; }
 
         #region ObjectFactory-like pattern
         static Dictionary<string, Type> SolverConnectorTypes = new Dictionary<string, Type>();
@@ -84,6 +85,7 @@ namespace GUI
                         throw new InvalidOperationException("initial data type values not correspond for " + obj.ToString());
                     }
                 }
+                OutputConfiguration = capabilities["results"] as JArray;
                 Connected = true;
             }
             catch (InvalidOperationException ex)

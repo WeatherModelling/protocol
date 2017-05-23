@@ -1,4 +1,5 @@
 ﻿set term png size 640,480
 set output '{{path}}'
+set title '{{caption}}'
 set yrange[-1:1]
-plot '-' u {{ind1}}:{{dep1}} w l
+plot '-' u {{x}}:{{y}} w l
