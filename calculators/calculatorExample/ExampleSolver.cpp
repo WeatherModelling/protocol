@@ -17,7 +17,8 @@ bool ExampleSolver::makeStep()
 {
 	time += 0.03;
 	for (int i = 0; i < Nx; i++) {
-		v[i] = sin(time)*sin(i*0.1);
+		v[i] = sin(time) + sin(6.28*i / Nx);
+		u[i] = sin(time) * sin(6.28*i / Nx);
 	}
 	return true;
 }

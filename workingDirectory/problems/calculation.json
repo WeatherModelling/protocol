@@ -1,0 +1,39 @@
+﻿{
+  "name" : "Simple 1D evolution problem example",
+  "solver": {
+    "type": "local",
+    "filename": "C:/Users/user/Desktop/protocol/calculators/calculatorExample/Debug/calculatorExample.exe"
+  },
+  "initials": [
+    {
+      "name": "g",
+      "type": {"typename": "double"},
+      "const": "true",
+      "value": 9.81
+    },
+    {
+      "name": "Nx",
+      "type": { "typename": "int" },
+      "const": "true",
+      "value": 10
+    },
+    {
+      "name": "u0",
+      "const": "false",
+      "type": {
+        "typename": "array",
+        "type": { "typename": "double" },
+        "count": "Nx"
+      },
+      "value": [ 0, 0.1, 0, 2, 0.1, 0, 0, 0, 0, 0, 0 ]
+    }
+  ],
+  "views": [
+    {
+	  "caption": "plot height versus coordinate",
+      "type": "line",
+      "xvalues": "x",
+      "yvalues": "v"
+    }
+  ]
+}

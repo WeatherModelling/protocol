@@ -42,11 +42,13 @@ void Service::executeCommand(const char * JSON)
 		};
 	}
 	outputStream << '\0';
+	outputStream.flush();
+	fflush(stdout);
 }
 
 void Service::version(const nlohmann::json & d)
 {
-	outputStream << R"({"version":)" << std::to_string(protocolVersion) << "}";
+	outputStream << json{ {"version",protocolVersion } };
 }
 
 void Service::getCapabilities(const nlohmann::json & d)
@@ -57,18 +59,20 @@ void Service::getCapabilities(const nlohmann::json & d)
         "restartable",
         "dynamic"
     ],
- "initial":
+ "initials":
 	[
-		{"name":"g","type":{"typename":"double"},"description":"gravity field strength","unit":"ms^-2"}
-		{"name":"Nx","type":{"typename":"int"},"description":"number of points along x axis"}
-		{"name":"u0","type":{"typename":"array","elementType":"double","count":"Nx"},"description":"Initial U distribution"}
+		{"name":"g","type":{"typename":"double"},"description":"gravity field strength","unit":"ms^-2"},
+		{"name":"Nx","type":{"typename":"int"},"description":"number of points along x axis"},
+		{"name":"u0","type":{"typename":"array","type":{"typename":"double"},"count":"Nx"},"description":"Initial U distribution"}
 	],
  "results":
     [
         {"name":"t","type":"double","description":"time","unit":"s","isIndependent":"true"},
-        {"name":"x","type":"double","description":"x coordinate","unit":"m","isIndependent":"true"},
-        {"name":"u","type":"double","description":"u field value","unit":"J"}
-        {"name":"v","type":"double","description":"velocity value","unit":"ms^-1"}
+        {"name":"x","type":"double","description":"x","unit":"m","isIndependent":"true"},
+        {"name":"z","type":"double","description":"z","unit":"m","isIndependent":"true"},
+        {"name":"T","type":"double","description":"temperature","unit":"K"},
+        {"name":"vx","type":"double","description":"horizontal velocity","unit":"ms^-1"},
+        {"name":"vz","type":"double","description":"vertical velocity","unit":"ms^-1"}
     ]
 }
 )";
@@ -89,9 +93,10 @@ void Service::evolve(const nlohmann::json & d)
 		throw std::exception("Solver not initiated");
 	}
 	bool ok = true;
-	if (d.find("stepsNumber") != d.end()) {
+	if (d.find("timeStepsNumber") != d.end()) {
+		const size_t timeStepsNumber = (size_t)d["timeStepsNumber"];
 		// do the steps number
-		for (size_t i = 0; i < (size_t)d["stepsNumber"]; i++)
+		for (size_t i = 0; i < timeStepsNumber; i++)
 		{
 			ok = solver->makeStep();
 			if (!ok) {
@@ -100,7 +105,8 @@ void Service::evolve(const nlohmann::json & d)
 		}
 	}
 	else if (d.find("finalTime") != d.end()) {
-		while (solver->getCurrentTime() <  (double)d["finalTime"])
+		const double finalTime = d["finalTime"];
+		while (solver->getCurrentTime() < finalTime)
 		{
 			ok = solver->makeStep();
 			if (!ok) {

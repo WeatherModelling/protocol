@@ -1,0 +1,51 @@
+﻿<Window x:Class="GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="400" Width="500"
+        Closed="Window_Closed">
+
+    <TabControl>
+        <TabControl.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="20" />
+            </Style>
+        </TabControl.Resources>
+
+        <TabItem Header="Задачи">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                    <Button Content="Выбрать" Click="Select_Click"/>
+                </StackPanel>
+                <ListBox x:Name="ProblemsListBox" SelectionChanged="ProblemsListBox_SelectionChanged"/>
+            </DockPanel>
+        </TabItem>
+        <TabItem Header="Результаты" x:Name="ResultsTab">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" x:Name="DynamicCalculatorControls">
+                    <Button Content="Запусить" Click="Start_Click"/>
+                    <Button Content="Остановить" Click="Stop_Click" />
+                </StackPanel>
+                <Image Source="{Binding Path=Image}"/>
+                <!-- , Converter={StaticResource uriToImageConv}-->
+
+
+            </DockPanel>
+
+        </TabItem>
+        <TabItem Header="Протокол" x:Name="log">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <CheckBox Content="Main"/>
+                    <CheckBox Content="Evolution"/>
+                    <CheckBox Content="Solver"/>
+                </StackPanel>
+                <TextBox AcceptsReturn="True" IsReadOnly="True" />
+
+            </DockPanel>
+        </TabItem>
+    </TabControl>
+</Window>

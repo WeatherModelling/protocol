@@ -1,0 +1,40 @@
+﻿{
+  "name" : "Simple 2D evolution problem example",
+  "solver": {
+    "type": "local",
+    "filename": "C:/Users/user/Desktop/protocol/calculators/2DCalculatorExample/Debug/2DCalculatorExample.exe"
+  },
+  "initials": [
+    {
+      "name": "g",
+      "type": {"typename": "double"},
+      "const": "true",
+      "value": 9.81
+    },
+    {
+      "name": "Nx",
+      "type": { "typename": "int" },
+      "const": "true",
+      "value": 10
+    },
+    {
+      "name": "u0",
+      "const": "false",
+      "type": {
+        "typename": "array",
+        "type": { "typename": "double" },
+        "count": "Nx"
+      },
+      "value": [ 0, 0.1, 0, 2, 0.1, 0, 0, 0, 0, 0, 0 ]
+    }
+  ],
+  "views": [
+    {
+	  "caption": "temperature in 'F",
+      "viewType": "heatmap",
+      "xvalues": "x",
+      "yvalues": "z",
+	  "magnitudes": "T"
+    }
+  ]
+}

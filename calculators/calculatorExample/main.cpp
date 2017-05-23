@@ -21,8 +21,8 @@ static std::stringstream make_fake_stream() {
 }
 
 int main() {
-	//std::istream& input = std::cin;
-	std::istream& input = make_fake_stream();
+	std::istream& input = std::cin;
+	//std::istream& input = make_fake_stream();
 	
 	Service service(std::cout);
 	while (!input.eof()) {
