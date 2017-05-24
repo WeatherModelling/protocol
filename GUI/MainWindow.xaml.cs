@@ -50,7 +50,9 @@ namespace GUI
 
 
         // object responsible for chart painting
-        GNUPlotter chartPainter;
+        List<GNUPlotter> chartPainters;
+
+
 
         public MainWindow()
         {
@@ -114,6 +116,14 @@ namespace GUI
                 }
 
                 string res = CurrentProblem.SolverConnector.GetResults();
+                UpdateChartPainters(res);
+            }
+        }
+
+        private void UpdateChartPainters(string res)
+        {
+            foreach (var chartPainter in chartPainters)
+            {
                 chartPainter.Update(res);
             }
         }
@@ -143,29 +153,92 @@ namespace GUI
             }
 
 
-            chartPainter = new GNUPlotter(
-                new GUI.GNUPlot.LineSeries(
-                    CurrentProblem.json["views"][0] as JObject,
-                    CurrentProblem.SolverConnector.OutputConfiguration
-                )
-            );
-            // bind charting model to view
-            ChartsContainer.DataContext = chartPainter;
+
+
+            ChartsContainer.Children.Clear();
+           
+            var z = FactorizeCount(CurrentProblem.json["views"].Count());
+            ChartsContainer.Rows = z.Item1;
+            ChartsContainer.Columns = z.Item2;
+
+            chartPainters = new List<GNUPlotter>();
+
+            foreach (JObject view in CurrentProblem.json["views"])
+            {
+                GNUPlotter chartPainter = new GNUPlotter(
+                    new GUI.GNUPlot.LineSeries(
+                        view,
+                        CurrentProblem.SolverConnector.OutputConfiguration
+                    )
+                );
+
+
+
+                Image im = new Image();
+                im.SetBinding(
+                    Image.SourceProperty,
+                    new Binding()
+                    {
+                        Path = new PropertyPath("Image"),
+                        Mode= BindingMode.OneWay,
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                        Source = chartPainter
+                    }
+                );
+                im.DataContext = chartPainter;
+                chartPainters.Add(chartPainter);
+                ChartsContainer.Children.Add(im);
+                
+            }
+
 
 
             // get calculation results for stationary model or initial fields for dynamic model
             // paint result charts
-            chartPainter.Update(
-                CurrentProblem.SolverConnector.GetResults()
-            );
+            UpdateChartPainters(CurrentProblem.SolverConnector.GetResults());
 
             // switch to results tab
             ResultsTab.IsSelected = true;
             // enable dynamic model controls 
             DynamicCalculatorControls.Visibility =
                 CurrentProblem.SolverConnector.Dynamic ? Visibility.Visible : Visibility.Hidden;
+        }
 
-
+        private Tuple<int,int> FactorizeCount(int count)
+        {
+            int rows, cols;
+            switch (count)
+            {
+                case 1:
+                    rows = 1;
+                    cols = 1;
+                    break;
+                case 2:
+                    rows = 1;
+                    cols = 2;
+                    break;
+                case 3:
+                    rows = 1;
+                    cols = 3;
+                    break;
+                case 4:
+                    rows = 2;
+                    cols = 2;
+                    break;
+                case 5:
+                    rows = 2;
+                    cols = 3;
+                    break;
+                case 6:
+                    rows = 2;
+                    cols = 3;
+                    break;
+                default:
+                    rows = (int)Math.Ceiling(Math.Sqrt(count));
+                    cols = rows;
+                    break;
+            }
+            return new Tuple<int, int>(rows, cols);
         }
 
         private void ProblemsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

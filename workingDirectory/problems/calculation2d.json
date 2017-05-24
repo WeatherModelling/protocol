@@ -2,7 +2,7 @@
   "name" : "Simple 2D evolution problem example",
   "solver": {
     "type": "local",
-    "filename": "C:/Users/user/Desktop/protocol/calculators/2DCalculatorExample/Debug/2DCalculatorExample.exe"
+    "filename": "C:/Users/user/Desktop/protocol/calculators/2DCalculatorExample/x64/Debug/2DCalculatorExample.exe"
   },
   "initials": [
     {
@@ -30,8 +30,8 @@
   ],
   "views": [
     {
-	  "caption": "temperature in 'F",
-      "viewType": "heatmap",
+	  "caption": "temperature in F",
+      "type": "heatmap",
       "xvalues": "x",
       "yvalues": "z",
 	  "magnitudes": "T"

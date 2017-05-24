@@ -6,7 +6,8 @@ class ExampleSolver :
 {
 public:
 	const double g;
-	const int Nx,Nz;
+	const int Nx;
+	const int Nz;
 	std::vector<std::vector<double> > T, vx,vz;
 	
 	ExampleSolver(const nlohmann::json & d);

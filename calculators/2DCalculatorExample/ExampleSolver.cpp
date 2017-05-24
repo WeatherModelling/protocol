@@ -1,9 +1,9 @@
 #include "ExampleSolver.h"
 #include <cmath>
 
-const inline std::vector<std::vector<double>>&& arrayOfDouble(size_t first, size_t second) {
+inline std::vector<std::vector<double>> arrayOfDouble(size_t first, size_t second) {
 	auto row = std::vector<double>(second, DBL_EPSILON);
-	return std::move(std::vector<std::vector<double> >(first, row));
+	return std::vector<std::vector<double> >(first, row);
 }
 
 ExampleSolver::ExampleSolver(const nlohmann::json & d) :

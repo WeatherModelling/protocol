@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="500"
+        Title="MainWindow" 
         Closed="Window_Closed">
 
     <TabControl>
@@ -25,17 +25,13 @@
         </TabItem>
         <TabItem Header="Результаты" x:Name="ResultsTab">
             <DockPanel>
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" x:Name="DynamicCalculatorControls">
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" x:Name="DynamicCalculatorControls" Height="65">
                     <Button Content="Запусить" Click="Start_Click"/>
                     <Button Content="Остановить" Click="Stop_Click" />
                 </StackPanel>
-                <StackPanel x:Name="ChartsContainer">
-                    <Image Source="{Binding Path=Image}"/>
-                    
-                </StackPanel>
-                <!-- , Converter={StaticResource uriToImageConv}-->
-
-
+                <UniformGrid x:Name="ChartsContainer">
+                </UniformGrid>
+                <!-- Width="{Binding Path=ActualWIdth, ElementName=ChartsContainer}"  Height="{Binding Path=ActualHeight, ElementName=ChartsContainer}"  -->
             </DockPanel>
 
         </TabItem>

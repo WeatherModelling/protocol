@@ -34,6 +34,12 @@
       "type": "line",
       "xvalues": "x",
       "yvalues": "u"
+    },
+	{
+	  "caption": "second plot height versus coordinate",
+      "type": "line",
+      "xvalues": "x",
+      "yvalues": "v"
     }
   ]
 }

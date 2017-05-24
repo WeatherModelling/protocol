@@ -16,6 +16,9 @@ namespace GUI
 {
     class GNUPlotter : INotifyPropertyChanged
     {
+        private static int last_id = 0;
+        private readonly int id = last_id++;
+
         public readonly string GNUPlotExecutable = "C:/Program Files/gnuplot/bin/gnuplot.exe";
         private Series series;
 
@@ -50,7 +53,7 @@ namespace GUI
         {
             using (Process process = new Process())
             {
-                string filename = MainWindow.WorkingDir + "/temp/" + Guid.NewGuid().ToString() + ".png";
+                string filename = MainWindow.WorkingDir + "/temp/" +  Guid.NewGuid().ToString() + ".png";
 
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
