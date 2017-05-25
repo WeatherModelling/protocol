@@ -57,11 +57,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="LogscaleStringConverter.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="Series.cs" />
     <Compile Include="GNUPlotter.cs" />
     <Compile Include="LineSeries.cs" />
     <Compile Include="LocalSolverConnector.cs" />
-    <Compile Include="Log.cs" />
     <Compile Include="Problem.cs" />
     <Compile Include="SolverConnector.cs" />
     <Page Include="MainWindow.xaml">

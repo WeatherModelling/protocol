@@ -2,7 +2,7 @@
   "name" : "Simple 1D evolution problem example",
   "solver": {
     "type": "local",
-    "filename": "C:/Users/user/Desktop/protocol/calculators/calculatorExample/Debug/calculatorExample.exe"
+    "filename": "C:/Users/user/Desktop/protocol/calculators/calculatorExample/x64/Release/calculatorExample.exe"
   },
   "initials": [
     {

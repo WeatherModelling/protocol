@@ -15,12 +15,19 @@ ExampleSolver::ExampleSolver(const nlohmann::json & d) :
 
 bool ExampleSolver::makeStep()
 {
-	time += 0.003;
+	time += 0.01;
 	for (int i = 0; i < Nx; i++) {
 		v[i] = sin(time) + sin(6.28*i / Nx);
-		u[i] = sin(time) * sin(6.28*i / Nx*(1+0.1*sin(time*3)));
+		u[i] = sin(time) * sin(6.28*i / Nx*(1+0.5*sin(time*3)));
 	}
-	return true;
+	int z=0;
+#pragma omp parallel for
+	for (int i = 1; i < 10000000; i++) {
+		// pretend working :)
+		z += i;
+	}
+
+	return z!=0;
 }
 
 void ExampleSolver::getResults(std::ostream &out)

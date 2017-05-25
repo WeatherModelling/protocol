@@ -20,11 +20,31 @@ namespace GUI
         private readonly int id = last_id++;
 
         public readonly string GNUPlotExecutable = "C:/Program Files/gnuplot/bin/gnuplot.exe";
+        private static Process GNUPlotProcess = null;
+
         private Series series;
+
+        private void StartProcess()
+        {
+            if (GNUPlotProcess != null)
+            {
+                return;
+            }
+            GNUPlotProcess = new Process();
+            GNUPlotProcess.StartInfo.UseShellExecute = false;
+            GNUPlotProcess.StartInfo.RedirectStandardOutput = true;
+            GNUPlotProcess.StartInfo.RedirectStandardInput = true;
+            GNUPlotProcess.StartInfo.RedirectStandardError = true;
+            GNUPlotProcess.StartInfo.CreateNoWindow = true;
+            GNUPlotProcess.StartInfo.FileName = GNUPlotExecutable;
+            GNUPlotProcess.Start();
+        }
+
 
         public GNUPlotter(Series series)
         {
             this.series = series;
+            StartProcess();
         }
 
         public ImageSource Image
@@ -51,28 +71,24 @@ namespace GUI
 
         internal void Update(string res)
         {
-            using (Process process = new Process())
-            {
-                string filename = MainWindow.WorkingDir + "/temp/" +  Guid.NewGuid().ToString() + ".png";
+            string filename = MainWindow.WorkingDir + "/temp/" + Guid.NewGuid().ToString() + ".png";
 
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardInput = true;
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.FileName = GNUPlotExecutable;
-                process.Start();
-                string script = 
-                    series.GetScript()
-                    .Replace("{{path}}", filename);
-                process.StandardInput.WriteLine(script);
-                process.StandardInput.WriteLine("#" + res);
-                process.StandardInput.WriteLine("e");
-                process.StandardInput.Close();
-                var output = process.StandardOutput.ReadToEnd();
-                process.WaitForExit();
-                SetImage(filename);
-                File.Delete(filename);
-            }
+            string script =
+                series.GetScript()
+                .Replace("{{path}}", filename);
+            GNUPlotProcess.StandardInput.WriteLine(script);
+            GNUPlotProcess.StandardInput.WriteLine("#" + res);
+            GNUPlotProcess.StandardInput.WriteLine("e");
+            GNUPlotProcess.StandardInput.WriteLine("set output 'x.txt'");
+            // print a marker to stderr
+            GNUPlotProcess.StandardInput.WriteLine("print 'xyzzy'");
+            GNUPlotProcess.StandardInput.Flush();
+            //GNUPlotProcess.StandardInput.Close();
+            //Thread.Sleep(1);
+            while (GNUPlotProcess.StandardError.ReadLine() != "xyzzy") ;
+            //GNUPlotProcess.WaitForExit();
+            SetImage(filename);
+            File.Delete(filename);
         }
 
 

@@ -86,35 +86,82 @@ namespace GUI
         #region Dynamic system evolution
         Thread calculationThread;
         bool DoCalculations;
+        // Current Calculation Speed
+        public int LimitStepsPerSecond { get; private set; }
 
-        const int maxFPS = 20;
+        const int maxFPS = 5;
 
         private void CalculationThread()
         {
+            bool limitStepsPerFrame = LimitStepsPerSecond > 0;
+            int maxStepsPerFrame=1;
+            int desiredFPS = maxFPS;
+            if (limitStepsPerFrame)
+            {
+                int maxStepsPerSecond = LimitStepsPerSecond;
+                if (maxStepsPerSecond < maxFPS)
+                {
+                    desiredFPS = maxStepsPerSecond;
+                    maxStepsPerFrame = 1;
+                }
+                else
+                {
+                    desiredFPS = maxFPS;
+                    maxStepsPerFrame = maxStepsPerSecond / desiredFPS;
+                }
+            }
+
+
             DoCalculations = true;
-            int lastTimeStepsPerFrame = 1; // an estimate
+            // оценка скорости счёта
+            int lastTimeStepsPerFrame = 1; 
             while (DoCalculations)
             {
+                // пытаемся увеличить количество шагов по времени так, 
+                // чтобы они выполнялись за время 1/maxFPS
+                
+                // счётчик шагов и времени на этом кадре
                 int timeStepsPerFrame = 0;
-                DateTime lastFrameTime = DateTime.Now;
-                // надеемся, что вычисление займёт время, примерно равное времени отрисовки кадра
-                // если это время не прошло, повторяем
-                do
+                DateTime frameStart = DateTime.Now;
+
+                double framePeroid = 1.0 / desiredFPS;
+                // за начальное количество шагов берём оценку для предыдущего шага
+                int stepsEstimate = lastTimeStepsPerFrame;
+                double period = 0;
+                while (true)
                 {
-                    CurrentProblem.SolverConnector.Evolve(lastTimeStepsPerFrame);
-                    timeStepsPerFrame += lastTimeStepsPerFrame;
-                } while ((DateTime.Now - lastFrameTime).TotalSeconds < 1.0 / maxFPS);
-                // оцениваем скорость счёта
-                double calculationTime = (DateTime.Now - lastFrameTime).TotalSeconds;
-                double stepsPerSecond = timeStepsPerFrame / calculationTime;
-                // даём новую оценку в шагах за кадр
-                lastTimeStepsPerFrame = (int)(stepsPerSecond / maxFPS);
-                if (lastTimeStepsPerFrame < 1)
+                    // надеемся, что вычисление займёт время framePeriod
+                    CurrentProblem.SolverConnector.Evolve(stepsEstimate);
+                    timeStepsPerFrame += stepsEstimate;
+                    period = (DateTime.Now - frameStart).TotalSeconds;
+                    // если сосчитали кадр до конца -- выходим
+                    if (timeStepsPerFrame == maxStepsPerFrame)  
+                    {
+                        break;
+                    }
+                    // если закончилось время - выходим
+                    if (period>=framePeroid)
+                    {
+                        break;
+                    }
+                    // увеличиваем количество шагов для следующего запуска evolve
+                    stepsEstimate = stepsEstimate*5/4;
+                    // проверяем, чтобы итоговое количество шагов не превысило ограничение
+                    if (stepsEstimate+timeStepsPerFrame > maxStepsPerFrame)
+                    {
+                        // делаем оставшиеся на этом кадре шаги 
+                        stepsEstimate = maxStepsPerFrame - timeStepsPerFrame;
+                    }
+                }
+                // если после счёта осталось время - спим
+                if (framePeroid > period)
                 {
-                    // we have to do at least one step
-                    lastTimeStepsPerFrame = 1;
+                    Thread.Sleep((int)(1000 * (framePeroid - period)));
                 }
 
+                lastTimeStepsPerFrame = timeStepsPerFrame;
+
+                // забираем результаты и рисуем их
                 string res = CurrentProblem.SolverConnector.GetResults();
                 UpdateChartPainters(res);
             }
@@ -130,6 +177,7 @@ namespace GUI
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
+            LimitStepsPerSecond = (int)Math.Pow(10, StepsPerSecondSlider.Value);
             calculationThread = new Thread(CalculationThread);
             calculationThread.Start();
         }
@@ -147,7 +195,7 @@ namespace GUI
             // initialize calculation
             CurrentProblem.SolverConnector.InitializeSolver();
             // calculation is completed right after initialization for stationary systems
-            if (CurrentProblem.SolverConnector.Dynamic)
+            if (!CurrentProblem.SolverConnector.Dynamic)
             {
                 state = State.Completed;
             }

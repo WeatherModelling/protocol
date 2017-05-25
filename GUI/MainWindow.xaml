@@ -18,16 +18,22 @@
         <TabItem Header="Задачи">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-                    <Button Content="Выбрать" Click="Select_Click"/>
+                    <Button Content="Задать начальные условия" Click="Select_Click"/>
                 </StackPanel>
                 <ListBox x:Name="ProblemsListBox" SelectionChanged="ProblemsListBox_SelectionChanged"/>
             </DockPanel>
         </TabItem>
         <TabItem Header="Результаты" x:Name="ResultsTab">
             <DockPanel>
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" x:Name="DynamicCalculatorControls" Height="65">
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" x:Name="DynamicCalculatorControls" >
+                    <StackPanel.Resources>
+                        <local:LogscaleStringConverter x:Key="LogscaleStringConverter"/>
+                    </StackPanel.Resources>
                     <Button Content="Запусить" Click="Start_Click"/>
                     <Button Content="Остановить" Click="Stop_Click" />
+                    <Slider IsSnapToTickEnabled="True" Margin="20" Minimum="0" Maximum="6" x:Name="StepsPerSecondSlider" Value="2" Width="100"/>
+                    <Label Margin="0,20" Content="{Binding Path=Value,ElementName=StepsPerSecondSlider,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource LogscaleStringConverter}}"/>
+                    <Label Margin="0,20" Content="Шагов в секунду"/>
                 </StackPanel>
                 <UniformGrid x:Name="ChartsContainer">
                 </UniformGrid>
