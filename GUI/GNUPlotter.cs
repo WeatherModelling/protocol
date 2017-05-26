@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using GUI.GNUPlot;
+using System.Configuration;
+
 namespace GUI
 {
     class GNUPlotter : INotifyPropertyChanged
@@ -19,7 +21,7 @@ namespace GUI
         private static int last_id = 0;
         private readonly int id = last_id++;
 
-        public readonly string GNUPlotExecutable = "C:/Program Files/gnuplot/bin/gnuplot.exe";
+
         private static Process GNUPlotProcess = null;
 
         private Series series;
@@ -36,7 +38,7 @@ namespace GUI
             GNUPlotProcess.StartInfo.RedirectStandardInput = true;
             GNUPlotProcess.StartInfo.RedirectStandardError = true;
             GNUPlotProcess.StartInfo.CreateNoWindow = true;
-            GNUPlotProcess.StartInfo.FileName = GNUPlotExecutable;
+            GNUPlotProcess.StartInfo.FileName = ApplicationSettings.GNUPlotExecutable;
             GNUPlotProcess.Start();
         }
 
@@ -71,7 +73,9 @@ namespace GUI
 
         internal void Update(string res)
         {
-            string filename = MainWindow.WorkingDir + "/temp/" + Guid.NewGuid().ToString() + ".png";
+            // used to catch the moment when GNUPlot 'plot' call finishes
+            string magicWord = "xyzzy";
+            string filename =  $"{Path.GetTempPath()}\\{Guid.NewGuid().ToString()}.png";
 
             string script =
                 series.GetScript()
@@ -79,13 +83,15 @@ namespace GUI
             GNUPlotProcess.StandardInput.WriteLine(script);
             GNUPlotProcess.StandardInput.WriteLine("#" + res);
             GNUPlotProcess.StandardInput.WriteLine("e");
+            // when gnuplot is configured to write an output file it releases previous output file
             GNUPlotProcess.StandardInput.WriteLine("set output 'x.txt'");
             // print a marker to stderr
-            GNUPlotProcess.StandardInput.WriteLine("print 'xyzzy'");
+            GNUPlotProcess.StandardInput.WriteLine($"print '{magicWord}'");
             GNUPlotProcess.StandardInput.Flush();
             //GNUPlotProcess.StandardInput.Close();
             //Thread.Sleep(1);
-            while (GNUPlotProcess.StandardError.ReadLine() != "xyzzy") ;
+            // wait for marker
+            while (GNUPlotProcess.StandardError.ReadLine() != magicWord) ;
             //GNUPlotProcess.WaitForExit();
             SetImage(filename);
             File.Delete(filename);

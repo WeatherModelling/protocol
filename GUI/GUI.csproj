@@ -38,6 +38,7 @@
       <HintPath>packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,7 +59,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="LogscaleStringConverter.cs" />
-    <Compile Include="Model.cs" />
+    <Compile Include="ApplicationSettings.cs" />
     <Compile Include="Series.cs" />
     <Compile Include="GNUPlotter.cs" />
     <Compile Include="LineSeries.cs" />

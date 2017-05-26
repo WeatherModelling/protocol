@@ -14,7 +14,7 @@ namespace GUI.GNUPlot
         {
             Dimensions = 3;
             scriptTemplate = System.IO.File.ReadAllText(
-                MainWindow.WorkingDir + Series.GNUPlotTemplatesDirectory + "line.gpl");
+                ApplicationSettings. WorkingDirectory + Series.GNUPlotTemplatesDirectory + "line.gpl");
 
             // find plotting varibles
             var variableOrder = FindOrderOfVariablesInOutput(

@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Configuration;
 
 namespace GUI
 {
@@ -41,8 +42,6 @@ namespace GUI
         // current window state
         State state = State.TaskNotChosen;
 
-        // application working directory
-        public static readonly string WorkingDir = @"C:/Users/user/Desktop/protocol/workingDirectory/";
 
         // problem descriptions list
         private readonly List<Problem> problems;
@@ -61,7 +60,7 @@ namespace GUI
             SolverConnector.RegisterSolverConnectorType("local", typeof(LocalSolverConnector));
 
             // Populate problems list
-            problems = Problem.ReadRirectory(WorkingDir + "/problems");
+            problems = Problem.ReadRirectory($"{ApplicationSettings.WorkingDirectory}/problems");
             ProblemsListBox.ItemsSource = problems;
 
         }
