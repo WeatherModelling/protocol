@@ -19,6 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Configuration;
+using Microsoft.Win32;
 
 namespace GUI
 {
@@ -59,13 +60,15 @@ namespace GUI
             // Register available solver connectors
             SolverConnector.RegisterSolverConnectorType("local", typeof(LocalSolverConnector));
 
-            // Populate problems list
-            problems = Problem.ReadRirectory($"{ApplicationSettings.WorkingDirectory}/problems");
-            ProblemsListBox.ItemsSource = problems;
+            GNUPlot.Series.RegisterSeriesType("line", typeof(GNUPlot.LineSeries));
+            GNUPlot.Series.RegisterSeriesType("heatmap", typeof(GNUPlot.HeatmapSeries));
 
+
+            // Populate problems list
+            problems = Problem.ReadRirectory($"{ApplicationSettings.Instance.WorkingDirectory}/problems");
+            ProblemsListBox.ItemsSource = problems;
         }
 
-        // 
         private Problem currentProblem;
         internal Problem CurrentProblem
         {
@@ -88,24 +91,23 @@ namespace GUI
         // Current Calculation Speed
         public int LimitStepsPerSecond { get; private set; }
 
-        const int maxFPS = 5;
-
+        
         private void CalculationThread()
         {
             bool limitStepsPerFrame = LimitStepsPerSecond > 0;
             int maxStepsPerFrame=1;
-            int desiredFPS = maxFPS;
+            int desiredFPS = ApplicationSettings.Instance.MaxFPS;
             if (limitStepsPerFrame)
             {
                 int maxStepsPerSecond = LimitStepsPerSecond;
-                if (maxStepsPerSecond < maxFPS)
+                if (maxStepsPerSecond < ApplicationSettings.Instance.MaxFPS)
                 {
                     desiredFPS = maxStepsPerSecond;
                     maxStepsPerFrame = 1;
                 }
                 else
                 {
-                    desiredFPS = maxFPS;
+                    desiredFPS = ApplicationSettings.Instance.MaxFPS;
                     maxStepsPerFrame = maxStepsPerSecond / desiredFPS;
                 }
             }
@@ -117,7 +119,7 @@ namespace GUI
             while (DoCalculations)
             {
                 // пытаемся увеличить количество шагов по времени так, 
-                // чтобы они выполнялись за время 1/maxFPS
+                // чтобы они выполнялись за время 1/desiredFPS
                 
                 // счётчик шагов и времени на этом кадре
                 int timeStepsPerFrame = 0;
@@ -213,7 +215,7 @@ namespace GUI
             foreach (JObject view in CurrentProblem.json["views"])
             {
                 GNUPlotter chartPainter = new GNUPlotter(
-                    new GUI.GNUPlot.LineSeries(
+                    GNUPlot.Series.Construct(
                         view,
                         CurrentProblem.SolverConnector.OutputConfiguration
                     )
@@ -308,6 +310,37 @@ namespace GUI
         {
             CurrentProblem?.SolverConnector?.Disconnect();
         }
+        
+
+        #region Settings page
+
+        private void ChangeGNUPlot_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog()
+            {
+                Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*",
+                CheckFileExists = true,
+                Title = "Выберите исполняемый файл GNUPlot",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
+            };
+            if (openFileDialog.ShowDialog()??false)
+            {
+                ApplicationSettings.Instance.GNUPlotExecutable = openFileDialog.FileName;
+            }
+        }
+
+        private void ChangeWorkingDirectory_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    ApplicationSettings.Instance.GNUPlotExecutable = dialog.SelectedPath;
+                }
+            }
+
+        }
+        #endregion
     }
 
 

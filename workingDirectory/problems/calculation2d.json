@@ -34,7 +34,7 @@
       "type": "heatmap",
       "xvalues": "x",
       "yvalues": "z",
-	  "magnitudes": "T"
+	  "zvalues": "T"
     }
   ]
 }

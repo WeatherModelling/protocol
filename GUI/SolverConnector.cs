@@ -18,9 +18,18 @@ namespace GUI
 
         #region ObjectFactory-like pattern
         static Dictionary<string, Type> SolverConnectorTypes = new Dictionary<string, Type>();
+        private static readonly Type[] constructorArguments = new Type[] { typeof(JObject) };
         public static void RegisterSolverConnectorType(string name, Type type)
         {
-            SolverConnectorTypes[name] = type;
+            if (!type.IsSubclassOf(typeof(SolverConnector)))
+            {
+                throw new ArgumentException($"Class {type.FullName} must be derived from {typeof(SolverConnector).FullName}");
+            }
+            if (type.GetConstructor(constructorArguments) == null)
+            {
+                throw new ArgumentException($"Class {type.Name} does not contain a constructor with appropriate arguments");
+            }
+            SolverConnectorTypes.Add(name,type);
         }
         public static SolverConnector Construct(JObject jo)
         {
@@ -29,7 +38,7 @@ namespace GUI
             {
                 throw new InvalidOperationException("Unsupported solver type");
             }
-            var ctor = SolverConnectorTypes[typename].GetConstructor(new Type[] { typeof(JObject) });
+            var ctor = SolverConnectorTypes[typename].GetConstructor(constructorArguments);
             object solver =  ctor.Invoke(new object[] { jo });
             return (SolverConnector)solver;
         }

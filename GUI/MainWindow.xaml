@@ -7,14 +7,12 @@
         mc:Ignorable="d"
         Title="MainWindow" 
         Closed="Window_Closed">
-
     <TabControl>
         <TabControl.Resources>
             <Style TargetType="Button">
                 <Setter Property="Margin" Value="20" />
             </Style>
         </TabControl.Resources>
-
         <TabItem Header="Задачи">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
@@ -35,11 +33,8 @@
                     <Label Margin="0,20" Content="{Binding Path=Value,ElementName=StepsPerSecondSlider,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource LogscaleStringConverter}}"/>
                     <Label Margin="0,20" Content="Шагов в секунду"/>
                 </StackPanel>
-                <UniformGrid x:Name="ChartsContainer">
-                </UniformGrid>
-                <!-- Width="{Binding Path=ActualWIdth, ElementName=ChartsContainer}"  Height="{Binding Path=ActualHeight, ElementName=ChartsContainer}"  -->
+                <UniformGrid x:Name="ChartsContainer"/>
             </DockPanel>
-
         </TabItem>
         <TabItem Header="Протокол" x:Name="log">
             <DockPanel>
@@ -51,6 +46,57 @@
                 <TextBox AcceptsReturn="True" IsReadOnly="True" />
 
             </DockPanel>
+        </TabItem>
+        <TabItem Header="Настройки">
+            <Grid>
+                <Grid.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Margin" Value="20" />
+                    </Style>
+                    <Style TargetType="Label">
+                        <Setter Property="Margin" Value="20" />
+                    </Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="Margin" Value="20" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Content="Рабочий каталог"/>
+                <TextBox 
+                    Grid.Column="1"
+                    IsReadOnly="True"
+                    Text="{Binding Source={x:Static local:ApplicationSettings.Instance}, Path=WorkingDirectory, Mode=OneWay}"/>
+                <Button Grid.Column="2"
+                        Content="Изменить"
+                       Click="ChangeWorkingDirectory_Click"
+                        
+                        />
+                <Label Grid.Row="1" Content="GNUPlot"/>
+                <TextBox 
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    IsReadOnly="True"
+                    Text="{Binding Source={x:Static local:ApplicationSettings.Instance}, Path=GNUPlotExecutable, Mode=OneWay}"/>
+                <Button Grid.Column="2" Grid.Row="1"
+                        Content="Изменить"
+                        Click="ChangeGNUPlot_Click"
+                        />
+                <Label Grid.Row="2" Content="FPS limit"/>
+                
+                <TextBox 
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    Text="{Binding Source={x:Static local:ApplicationSettings.Instance}, Path=MaxFPS}"/>
+            </Grid>
         </TabItem>
     </TabControl>
 </Window>

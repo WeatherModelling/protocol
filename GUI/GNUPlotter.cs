@@ -38,7 +38,7 @@ namespace GUI
             GNUPlotProcess.StartInfo.RedirectStandardInput = true;
             GNUPlotProcess.StartInfo.RedirectStandardError = true;
             GNUPlotProcess.StartInfo.CreateNoWindow = true;
-            GNUPlotProcess.StartInfo.FileName = ApplicationSettings.GNUPlotExecutable;
+            GNUPlotProcess.StartInfo.FileName = ApplicationSettings.Instance.GNUPlotExecutable;
             GNUPlotProcess.Start();
         }
 
