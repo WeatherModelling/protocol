@@ -30,11 +30,46 @@
   ],
   "views": [
     {
-	  "caption": "temperature in F",
+      "caption": "temperature in F",
       "type": "heatmap",
       "xvalues": "x",
       "yvalues": "z",
-	  "zvalues": "T"
+      "zvalues": "T"
+    },
+    {
+      "caption": "temperature in F",
+      "type": "heatmap",
+      "xvalues": "x",
+      "yvalues": "z",
+      "zvalues": "T"
+    },
+    {
+      "caption": "temperature in F",
+      "type": "heatmap",
+      "xvalues": "x",
+      "yvalues": "z",
+      "zvalues": "T"
+    },
+    {
+      "caption": "temperature in F",
+      "type": "heatmap",
+      "xvalues": "x",
+      "yvalues": "z",
+      "zvalues": "T"
+    },
+    {
+      "caption": "temperature in F",
+      "type": "heatmap",
+      "xvalues": "x",
+      "yvalues": "z",
+      "zvalues": "T"
+    },
+    {
+      "caption": "temperature in F",
+      "type": "heatmap",
+      "xvalues": "x",
+      "yvalues": "z",
+      "zvalues": "T"
     }
   ]
 }

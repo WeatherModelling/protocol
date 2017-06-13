@@ -2,5 +2,14 @@
 set output '{{path}}'
 set title '{{caption}}'
 set dgrid3d 100,100
-set view map
-splot '-' u {{x}}:{{y}}:{{z}} w pm3d
+set palette negative defined ( \
+    0 '#D53E4F',\
+    1 '#F46D43',\
+    2 '#FDAE61',\
+    3 '#FEE08B',\
+    4 '#E6F598',\
+    5 '#ABDDA4',\
+    6 '#66C2A5',\
+    7 '#3288BD' )
+set pm3d map
+splot '-' u {{x}}:{{y}}:{{z}}

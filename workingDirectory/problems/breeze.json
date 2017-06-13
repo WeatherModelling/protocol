@@ -1,0 +1,74 @@
+﻿{
+  "name" : "Breeze :)",
+  "solver": {
+    "type": "local",
+    "filename": "C:/Users/user/Desktop/protocol/calculators/breezeExample/x64/Debug/breezeCalculatorExample.exe"
+  },
+  "initials": [
+    {
+      "name": "DT00",
+      "type": { "typename": "double" },
+      "const": "true",
+      "value": 1.0
+    },
+    {
+      "name": "dt0",
+      "type": { "typename": "double" },
+      "const": "true",
+      "value": 1.0
+    },
+    {
+      "name": "x0",
+      "type": { "typename": "double" },
+      "const": "true",
+      "value": 1.0
+    },
+    {
+      "name": "z0",
+      "type": { "typename": "double" },
+      "const": "true",
+      "value": 1.0
+    },
+    {
+      "name": "v0",
+      "type": { "typename": "double" },
+      "const": "true",
+      "value": 1.0
+    },
+    {
+      "name": "Nx",
+      "type": { "typename": "int" },
+      "const": "true",
+      "value": 10
+    },
+    {
+      "name": "Nz",
+      "type": { "typename": "int" },
+      "const": "true",
+      "value": 10
+    }
+  ],
+  "views": [
+    {
+      "caption": "u1",
+      "type": "heatmap",
+      "xvalues": "x",
+      "yvalues": "z",
+      "zvalues": "u1"
+    },
+    {
+      "caption": "u2",
+      "type": "heatmap",
+      "xvalues": "x",
+      "yvalues": "z",
+      "zvalues": "u2"
+    },
+    {
+      "caption": "p1",
+      "type": "heatmap",
+      "xvalues": "x",
+      "yvalues": "z",
+      "zvalues": "p1"
+    }
+  ]
+}
