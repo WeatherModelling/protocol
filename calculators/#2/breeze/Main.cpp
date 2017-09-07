@@ -11,7 +11,7 @@ struct Calculator {
 	const real epsilon = std::numeric_limits<real>::epsilon();
 public:
 	// horizontal resolution
-	const int Nx;
+	const int Nx     ;
 	// vertical resolution
 	const int Nz;
 	// 'vertical' array of machine epsilons
